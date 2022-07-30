@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleRestApi {
+public class SampleRestApiImpl implements SampleRestApi {
     private Response response;
     private final JSONObject requestParams = new JSONObject();
     private List<Map<Object, Object>> users = new ArrayList<>();
     private Map<String, String> newCreatedUserDataMap;
-
+    private Map<Object, Object> testUser;
     private Object loginToken;
 
+    public SampleRestApiImpl creatUserPostRequest(String name, String email, String password) {
 
-    public SimpleRestApi creatUserPostRequest(String name, String email, String password) {
-        RestAssured.baseURI = "http://restapi.adequateshop.com/api/authaccount/registration";
+        RestAssured.baseURI = createUrl;
 
         // Put all needed credentials in the request in JSONObject requestParams
         requestParams.put("name", name);
@@ -39,8 +39,8 @@ public class SimpleRestApi {
 
     }
 
-    public SimpleRestApi login(String email, String password) {
-        RestAssured.baseURI = "http://restapi.adequateshop.com/api/authaccount/login";
+    public SampleRestApiImpl login(String email, String password) {
+        RestAssured.baseURI = loginUrl;
         requestParams.put("email", email);
         requestParams.put("password", password);
         // Post the request And get the Token key from the response
@@ -57,8 +57,8 @@ public class SimpleRestApi {
         return this;
     }
 
-    public SimpleRestApi getAllUsersFromSpecificPage(int pageIndex) {
-        RestAssured.baseURI = "http://restapi.adequateshop.com/api/users?page=" + pageIndex;
+    public SampleRestApiImpl getAllUsersFromSpecificPage(int pageIndex) {
+        RestAssured.baseURI = getAllUsersUrl + pageIndex;
         // Make GET request And get the response
         response = RestAssured.given()
                 .given()
@@ -78,21 +78,55 @@ public class SimpleRestApi {
         }
     }
 
-    public void printSingleUserData(Map<String, String> userData){
+    public void printSingleUserData() {
         System.out.println();
-        userData.forEach((key, value) -> System.out.println(key + " -> " + value));
+        testUser.forEach((key, value) -> System.out.println(key + " -> " + value));
     }
 
-    public SimpleRestApi getUserById(int userId) {
-        RestAssured.baseURI = "http://restapi.adequateshop.com/api/users/" + userId;
+    public SampleRestApiImpl getUserById(int userId) throws Exception {
+        RestAssured.baseURI = getUsersUrl + userId;
 
-         RestAssured.given()
+        // Make GET request And get the response
+        response = RestAssured
                 .given()
                 .header("Authorization", "Bearer " + loginToken)
-                .get()
-                .jsonPath()
-                .getMap("data");
+                .get();
 
-         return this;
+        // Save the result as map
+        testUser = response.jsonPath().getMap("");
+        return this;
+    }
+
+    public SampleRestApiImpl updateUser(String newName, String newEmail, String newLocation, int userId) {
+        RestAssured.baseURI = updateUserUrl + userId;
+        requestParams.put("id", userId);
+        requestParams.put("name", newName);
+        requestParams.put("email", newEmail);
+        requestParams.put("location", newLocation);
+        // Make PUT request
+        response = RestAssured.given()
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + loginToken)
+                .body(requestParams.toJSONString())
+                .put();
+
+        testUser = response.jsonPath().getMap("");
+        return this;
+    }
+
+    /**
+     * Delete user by ID
+     *
+     * @param userId int
+     * @return Status code returned from the API
+     */
+    public int deleteUser(int userId) {
+        RestAssured.baseURI = deleteUserUrl + userId;
+        // Returns status code
+        return RestAssured
+                .given()
+                .header("Authorization", "Bearer " + loginToken)
+                .delete()
+                .getStatusCode();
     }
 }
