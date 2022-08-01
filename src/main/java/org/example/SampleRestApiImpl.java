@@ -12,13 +12,18 @@ public class SampleRestApiImpl implements SampleRestApi {
     private Response response;
     private final JSONObject requestParams = new JSONObject();
     private List<Map<Object, Object>> users = new ArrayList<>();
-    private Map<String, String> newCreatedUserDataMap;
-    private Map<Object, Object> testUser;
+    private Map<Object, Object> userData;
     private Object loginToken;
 
+    /**
+     * Registrate a user with correct credentials
+     * @param name String
+     * @param email String
+     * @param password String
+     * @return SampleRestApiImpl.class
+     */
     public SampleRestApiImpl creatUserPostRequest(String name, String email, String password) {
-
-        RestAssured.baseURI = createUrl;
+        RestAssured.baseURI = registrationUrl;
 
         // Put all needed credentials in the request in JSONObject requestParams
         requestParams.put("name", name);
@@ -26,7 +31,8 @@ public class SampleRestApiImpl implements SampleRestApi {
         requestParams.put("password", password);
 
         // Post the request And get the data as Map from the response
-        newCreatedUserDataMap = RestAssured.given()
+        userData = RestAssured
+                .given()
                 .header("Content-Type", "application/json")// Add a header stating the Request body is a JSON
                 .body(requestParams.toJSONString()) // JSONObject is a class that represents a Simple JSON.
                 .post()
@@ -34,11 +40,17 @@ public class SampleRestApiImpl implements SampleRestApi {
                 .jsonPath()
                 .getMap("data");// Post the request and check the response
 
-        System.out.println("New created User: " + newCreatedUserDataMap);
+        System.out.println("New created User: " + userData);
         return this;
 
     }
 
+    /**
+     * Login by email na password
+     * @param email String
+     * @param password String
+     * @return SampleRestApiImpl.class
+     */
     public SampleRestApiImpl login(String email, String password) {
         RestAssured.baseURI = loginUrl;
         requestParams.put("email", email);
@@ -52,15 +64,18 @@ public class SampleRestApiImpl implements SampleRestApi {
                 .jsonPath()
                 .getMap("data")
                 .get("Token");
-
-        System.out.println("Token: " + loginToken);
         return this;
     }
 
+    /**
+     * Get all users from given page
+     * @param pageIndex int
+     * @return SampleRestApiImpl.class
+     */
     public SampleRestApiImpl getAllUsersFromSpecificPage(int pageIndex) {
         RestAssured.baseURI = getAllUsersUrl + pageIndex;
         // Make GET request And get the response
-        response = RestAssured.given()
+        response = RestAssured
                 .given()
                 .header("Authorization", "Bearer " + loginToken)
                 .get();
@@ -70,6 +85,9 @@ public class SampleRestApiImpl implements SampleRestApi {
         return this;
     }
 
+    /**
+     * Print List of users data
+     */
     public void printUsers() {
         System.out.println("*********** All users *********** ");
         for (Map<Object, Object> user : users) {
@@ -78,12 +96,20 @@ public class SampleRestApiImpl implements SampleRestApi {
         }
     }
 
+    /**
+     * Print user data
+     */
     public void printSingleUserData() {
         System.out.println();
-        testUser.forEach((key, value) -> System.out.println(key + " -> " + value));
+        userData.forEach((key, value) -> System.out.println(key + " -> " + value));
     }
 
-    public SampleRestApiImpl getUserById(int userId) throws Exception {
+    /**
+     * Get user by ID
+     * @param userId int
+     * @return SampleRestApiImpl.class
+     */
+    public SampleRestApiImpl getUserById(int userId){
         RestAssured.baseURI = getUsersUrl + userId;
 
         // Make GET request And get the response
@@ -93,11 +119,19 @@ public class SampleRestApiImpl implements SampleRestApi {
                 .get();
 
         // Save the result as map
-        testUser = response.jsonPath().getMap("");
+        userData = response.jsonPath().getMap("");
         return this;
     }
 
-    public SampleRestApiImpl updateUser(String newName, String newEmail, String newLocation, int userId) {
+    /**
+     * Sent request to update given user
+     * @param userId int
+     * @param newName String
+     * @param newEmail String
+     * @param newLocation String
+     * @return SampleRestApiImpl.class
+     */
+    public SampleRestApiImpl updateUser(int userId, String newName, String newEmail, String newLocation) {
         RestAssured.baseURI = updateUserUrl + userId;
         requestParams.put("id", userId);
         requestParams.put("name", newName);
@@ -110,13 +144,12 @@ public class SampleRestApiImpl implements SampleRestApi {
                 .body(requestParams.toJSONString())
                 .put();
 
-        testUser = response.jsonPath().getMap("");
+        userData = response.jsonPath().getMap("");
         return this;
     }
 
     /**
      * Delete user by ID
-     *
      * @param userId int
      * @return Status code returned from the API
      */

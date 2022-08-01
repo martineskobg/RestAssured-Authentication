@@ -1,71 +1,29 @@
-@endpoint @categories
+@sampleApi
 Feature: Test Simple Rest API
 
   Background:
-    Given Api url base url for categories "https://api.publicapis.org/categories"
+    Given Login Api url http://restapi.adequateshop.com/api/authaccount/login
 
-  @categoriesCount
-  Scenario:Verify the categories count
-    Given Expected count of all categories is 51
-    When Get the actual categories count
-    Then Verify that expected categories count is equal to actual count
+  @getUsers
+  Scenario: List all users on a given page by using Get All Users API
+    Given Get All Users API url http://restapi.adequateshop.com/api/users?page=
+    When I sent GET request with page index 1
+    Then As response I receive 10 users
 
-  @categoryContent
-  Scenario Outline: Check for missing category
-    Given Category name <name>
-    When Get all categories names
-    Then heck if category is missing
-    Examples:
-      | name                           |
-      | Animals                        |
-      | Anime                          |
-      | Anti-Malware                   |
-      | Art & Design                   |
-      | Authentication & Authorization |
-      | Blockchain                     |
-      | Books                          |
-      | Business                       |
-      | Calendar                       |
-      | Cloud Storage & File Sharing   |
-      | Continuous Integration         |
-      | Cryptocurrency                 |
-      | Currency Exchange              |
-      | Data Validation                |
-      | Development                    |
-      | Dictionaries                   |
-      | Documents & Productivity       |
-      | Email                          |
-      | Entertainment                  |
-      | Environment                    |
-      | Events                         |
-      | Finance                        |
-      | Food & Drink                   |
-      | Games & Comics                 |
-      | Geocoding                      |
-      | Government                     |
-      | Health                         |
-      | Jobs                           |
-      | Machine Learning               |
-      | Music                          |
-      | News                           |
-      | Open Data                      |
-      | Open Source Projects           |
-      | Patent                         |
-      | Personality                    |
-      | Phone                          |
-      | Photography                    |
-      | Programming                    |
-      | Science & Math                 |
-      | Security                       |
-      | Shopping                       |
-      | Social                         |
-      | Sports & Fitness               |
-      | Test Data                      |
-      | Text Analysis                  |
-      | Tracking                       |
-      | Transportation                 |
-      | URL Shorteners                 |
-      | Vehicle                        |
-      | Video                          |
-      | Weather                        |
+  @getUserById
+  Scenario: Get single user by id
+    Given Get User By Id API url http://restapi.adequateshop.com/api/users/
+    When I sent GET request with existing user ID as parameter
+    Then I receive the user data as response
 
+  @updateUser
+  Scenario: Update single user information
+    Given Update User Object API url http://restapi.adequateshop.com/api/users/
+    When I sent PUT request with correct data
+    Then I receive the user data with updated parameters as response
+
+  @deleteUser
+  Scenario: Delete user
+    Given Delete user by Id url http://restapi.adequateshop.com/api/users/
+    When I sent DELETE request with existing user ID as parameter
+    Then Verify the status code is 200

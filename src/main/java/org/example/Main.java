@@ -1,11 +1,11 @@
 package org.example;
 
 public class Main {
-    private static final String NAME = "Martin B. 3";
+    private static final String NAME = "Martin BB. 37";
     private static final String EMAIL = NAME + "@gmail.com";
     private static final String PASSWORD = "123456";
-    private static final int USER_ID = 137033;
-    private static final String NEW_NAME = "Test B.";
+    private static final int USER_ID = 137399;
+    private static final String NEW_NAME = "Test B.37";
     private static final String NEW_EMAIL = NEW_NAME + "@abv.com";
     private static final String NEW_LOCATION = "BG";
 
@@ -32,12 +32,12 @@ public class Main {
         // Login, Update user and print the data
         sampleRestApi
                 .login(EMAIL, PASSWORD)
-                .updateUser(NEW_NAME, NEW_EMAIL, NEW_LOCATION, USER_ID)
+                .updateUser(USER_ID, NEW_NAME, NEW_EMAIL, NEW_LOCATION)
                 .printSingleUserData();
 
         // Delete user
        if (sampleRestApi.login(EMAIL, PASSWORD).deleteUser(USER_ID) == 200 ){
-           System.out.println("User has been deleted");
+           System.out.println("\nUser has been deleted");
        }else {
            System.out.println("User hasn't been deleted");
        }
