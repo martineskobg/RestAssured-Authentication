@@ -17,8 +17,9 @@ public class SampleRestApiImpl implements SampleRestApi {
 
     /**
      * Registrate a user with correct credentials
-     * @param name String
-     * @param email String
+     *
+     * @param name     String
+     * @param email    String
      * @param password String
      * @return SampleRestApiImpl.class
      */
@@ -39,15 +40,14 @@ public class SampleRestApiImpl implements SampleRestApi {
                 .body()
                 .jsonPath()
                 .getMap("data");// Post the request and check the response
-
-        System.out.println("New created User: " + userData);
         return this;
 
     }
 
     /**
      * Login by email na password
-     * @param email String
+     *
+     * @param email    String
      * @param password String
      * @return SampleRestApiImpl.class
      */
@@ -64,11 +64,13 @@ public class SampleRestApiImpl implements SampleRestApi {
                 .jsonPath()
                 .getMap("data")
                 .get("Token");
+        System.out.println("Login Token = " + loginToken);
         return this;
     }
 
     /**
      * Get all users from given page
+     *
      * @param pageIndex int
      * @return SampleRestApiImpl.class
      */
@@ -106,10 +108,11 @@ public class SampleRestApiImpl implements SampleRestApi {
 
     /**
      * Get user by ID
+     *
      * @param userId int
      * @return SampleRestApiImpl.class
      */
-    public SampleRestApiImpl getUserById(int userId){
+    public SampleRestApiImpl getUserById(int userId) {
         RestAssured.baseURI = getUsersUrl + userId;
 
         // Make GET request And get the response
@@ -125,9 +128,10 @@ public class SampleRestApiImpl implements SampleRestApi {
 
     /**
      * Sent request to update given user
-     * @param userId int
-     * @param newName String
-     * @param newEmail String
+     *
+     * @param userId      int
+     * @param newName     String
+     * @param newEmail    String
      * @param newLocation String
      * @return SampleRestApiImpl.class
      */
@@ -150,6 +154,7 @@ public class SampleRestApiImpl implements SampleRestApi {
 
     /**
      * Delete user by ID
+     *
      * @param userId int
      * @return Status code returned from the API
      */
