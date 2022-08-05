@@ -1,15 +1,15 @@
 package org.example;
 
 public class Main {
-    private static final String NAME = "Martin BA1";
+    private static final String NAME = "Martin BA2";
     private static final String EMAIL = NAME + "@gmail.com";
     private static final String PASSWORD = "123456";
-    private static final int USER_ID = 137751;
-    private static final String NEW_NAME = "Test B.B1";
+    private static final int USER_ID = 137851;
+    private static final String NEW_NAME = "Test B.B2";
     private static final String NEW_EMAIL = NEW_NAME + "@abv.com";
     private static final String NEW_LOCATION = "BG";
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SampleRestApiImpl sampleRestApi = new SampleRestApiImpl();
 
         // Create,Login, Print
@@ -34,11 +34,11 @@ public class Main {
                 .printSingleUserData();
 
         // Delete user
-       if (sampleRestApi.login(EMAIL, PASSWORD).deleteUser(USER_ID) == 200 ){
-           System.out.println("\nUser has been deleted");
-       }else {
-           System.out.println("User hasn't been deleted");
-       }
+        if (sampleRestApi.login(EMAIL, PASSWORD).deleteUser(USER_ID) == 200) {
+            System.out.println("\nUser has been deleted");
+        } else {
+            System.out.println("User hasn't been deleted");
+        }
     }
 }
 

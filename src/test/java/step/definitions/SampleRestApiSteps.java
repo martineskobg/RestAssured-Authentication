@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Assertions;
 import java.util.Map;
 
 public class SampleRestApiSteps {
-    private final String NAME = "Martin7D";
+    private final String NAME = "Martin8f";
     private final String EMAIL = NAME + "@gmail.com";
     private final String PASSWORD = "123456";
-    private final String NEW_NAME = "Test7D";
+    private final String NEW_NAME = "Test8f";
     private final String NEW_LOCATION = "BG";
     private final JSONObject requestParams = new JSONObject();
     private Response response;
@@ -47,9 +47,9 @@ public class SampleRestApiSteps {
     public void i_receive_success_message() {
         System.out.println("Get message after creating a user");
        // This ID will be used in delete request
-        createdUserId = response.jsonPath().getMap("data").get("Id");
         String message = response.jsonPath().getString("message");
         Assertions.assertEquals("success", message, "The message is not success!");
+        createdUserId = response.jsonPath().getMap("data").get("Id");
     }
 
     @Given("Login Api url {}")
